@@ -37,6 +37,7 @@ export default {
   },
   rules: {
     "oas2-operation-formData-consume-check": {
+      // messsage: ".",
       description:
         'Operations with "in: formData" parameter must include "application/x-www-form-urlencoded" or "multipart/form-data" in their "consumes" property.',
       recommended: true,
@@ -47,6 +48,7 @@ export default {
       },
     },
     "operation-operationId-unique": {
+      // messsage: "",
       description: 'Every operation must have unique "operationId".',
       recommended: true,
       severity: DiagnosticSeverity.Error,
@@ -56,8 +58,8 @@ export default {
       },
     },
     "operation-parameters": {
+      message: "{{error}}.",
       description: "Operation parameters are unique and non-repeating.",
-      message: "{{error}}",
       recommended: true,
       given: "#OperationObject.parameters",
       then: {
@@ -65,7 +67,8 @@ export default {
       },
     },
     "operation-tag-defined": {
-      description: "Operation tags must be defined in global tags.",
+      message: "Operation tags must be defined in global tags.",
+      // description: ".",
       recommended: true,
       given: "$",
       then: {
@@ -73,8 +76,8 @@ export default {
       },
     },
     "path-params": {
+      message: "{{error}}.",
       description: "Path parameters must be defined and valid.",
-      message: "{{error}}",
       severity: DiagnosticSeverity.Error,
       recommended: true,
       given: "$",
@@ -83,10 +86,10 @@ export default {
       },
     },
     "duplicated-entry-in-enum": {
+      message: "{{error}}.",
       description: "Enum values must not have duplicate entry.",
       severity: DiagnosticSeverity.Warning,
       recommended: true,
-      message: "{{error}}",
       given: ["$..[?(@property !== 'properties' && @ && @.enum)]"],
       then: {
         field: "enum",
@@ -100,7 +103,8 @@ export default {
       },
     },
     "no-eval-in-markdown": {
-      description: 'Markdown descriptions must not have "eval(".',
+      message: 'Markdown descriptions must not have "eval(".',
+      // description: "",
       recommended: true,
       given: "$..[description,title]",
       then: {
@@ -111,7 +115,8 @@ export default {
       },
     },
     "no-script-tags-in-markdown": {
-      description: 'Markdown descriptions must not have "<script>" tags.',
+      message: 'Markdown descriptions must not have "<script>" tags.',
+      // description: "",
       recommended: true,
       given: "$..[description,title]",
       then: {
@@ -122,8 +127,8 @@ export default {
       },
     },
     "openapi-tags-uniqueness": {
+      message: "{{error}}.",
       description: "Each tag must have a unique name.",
-      message: "{{error}}",
       severity: DiagnosticSeverity.Error,
       recommended: true,
       given: "$.tags",
@@ -132,7 +137,8 @@ export default {
       },
     },
     "operation-operationId": {
-      description: 'Operation must have "operationId".',
+      message: 'Operation must have "operationId".',
+      // description: "",
       recommended: true,
       given: "#OperationObject",
       then: {
@@ -143,6 +149,7 @@ export default {
     "path-declarations-must-exist": {
       message:
         'Path parameter declarations must not be empty, ex."/given/{}" is invalid.',
+      // description: "",
       recommended: true,
       given: "$.paths",
       then: {
@@ -155,6 +162,7 @@ export default {
     },
     "path-keys-no-trailing-slash": {
       message: "Path must not end with slash.",
+      // description: "",
       recommended: true,
       given: "$.paths",
       then: {
@@ -166,7 +174,8 @@ export default {
       },
     },
     "path-not-include-query": {
-      description: "Path must not include query string.",
+      message: "Path must not include query string.",
+      // description: "",
       recommended: true,
       given: "$.paths",
       then: {
@@ -178,9 +187,9 @@ export default {
       },
     },
     "no-ref-siblings": {
-      formats: [oas2, oas3_0],
+      message: "{{error}}.",
       description: "Property must not be placed among $ref",
-      message: "{{error}}",
+      formats: [oas2, oas3_0],
       severity: DiagnosticSeverity.Error,
       recommended: true,
       resolved: false,
@@ -190,8 +199,8 @@ export default {
       },
     },
     "typed-enum": {
+      message: "{{error}}.",
       description: "Enum values must respect the specified type.",
-      message: "{{error}}",
       recommended: true,
       given: "$..[?(@ && @.enum && @.type)]",
       then: {
@@ -199,7 +208,8 @@ export default {
       },
     },
     "oas2-api-host": {
-      description: 'OpenAPI "host" must be present and non-empty string.',
+      message: 'OpenAPI "host" must be present and non-empty string.',
+      // description: "",
       recommended: true,
       formats: [oas2],
       given: "$",
@@ -209,8 +219,8 @@ export default {
       },
     },
     "oas2-api-schemes": {
-      description:
-        'OpenAPI host "schemes" must be present and non-empty array.',
+      message: 'OpenAPI host "schemes" must be present and non-empty array.',
+      // description: "",
       recommended: true,
       formats: [oas2],
       given: "$",
@@ -230,18 +240,19 @@ export default {
       },
     },
     "oas2-discriminator": {
+      message: "{{error}}.",
       description: "discriminator property must be defined and required",
       recommended: true,
       formats: [oas2],
       severity: DiagnosticSeverity.Error,
-      message: "{{error}}",
       given: "$.definitions[?(@.discriminator)]",
       then: {
         function: oasDiscriminator,
       },
     },
     "oas2-host-not-example": {
-      description: "Host URL must not point at example.com.",
+      message: "Host URL must not point at example.com.",
+      // description: "",
       recommended: false,
       formats: [oas2],
       given: "$",
@@ -254,7 +265,8 @@ export default {
       },
     },
     "oas2-host-trailing-slash": {
-      description: "Server URL must not have trailing slash.",
+      message: "Server URL must not have trailing slash.",
+      // description: "",
       recommended: true,
       formats: [oas2],
       given: "$",
@@ -267,9 +279,9 @@ export default {
       },
     },
     "oas2-operation-security-defined": {
+      message: "{{error}}.",
       description:
         'Operation "security" values must match a scheme defined in the "securityDefinitions" object.',
-      message: "{{error}}",
       recommended: true,
       formats: [oas2],
       given: "$",
@@ -281,8 +293,8 @@ export default {
       },
     },
     "oas2-valid-schema-example": {
+      message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      message: "{{error}}",
       recommended: true,
       formats: [oas2],
       severity: DiagnosticSeverity.Error,
@@ -301,8 +313,8 @@ export default {
       },
     },
     "oas2-valid-media-example": {
+      message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      message: "{{error}}",
       recommended: true,
       formats: [oas2],
       severity: DiagnosticSeverity.Error,
@@ -339,8 +351,8 @@ export default {
       },
     },
     "oas2-schema": {
-      description: "Validate structure of OpenAPI v2 specification.",
       message: "{{error}}.",
+      description: "Validate structure of OpenAPI v2 specification.",
       recommended: true,
       formats: [oas2],
       severity: DiagnosticSeverity.Error,
@@ -350,7 +362,8 @@ export default {
       },
     },
     "oas2-unused-definition": {
-      description: "Potentially unused definition has been detected.",
+      message: "Potentially unused definition has been detected.",
+      // description: "",
       recommended: true,
       resolved: false,
       formats: [oas2],
@@ -363,7 +376,8 @@ export default {
       },
     },
     "oas3-api-servers": {
-      description: 'OpenAPI "servers" must be present and non-empty array.',
+      message: 'OpenAPI "servers" must be present and non-empty array.',
+      // description: "",
       recommended: true,
       formats: [oas3],
       given: "$",
@@ -383,8 +397,8 @@ export default {
       },
     },
     "oas3-examples-value-or-externalValue": {
-      description:
-        'Examples must have either "value" or "externalValue" field.',
+      message: 'Examples must have either "value" or "externalValue" field.',
+      // description: "",
       recommended: true,
       formats: [oas3],
       given: [
@@ -403,9 +417,9 @@ export default {
       },
     },
     "oas3-operation-security-defined": {
+      message: "{{error}}.",
       description:
         'Operation "security" values must match a scheme defined in the "components.securitySchemes" object.',
-      message: "{{error}}",
       recommended: true,
       formats: [oas3],
       given: "$",
@@ -417,7 +431,8 @@ export default {
       },
     },
     "oas3-server-not-example.com": {
-      description: "Server URL must not point at example.com.",
+      message: "Server URL must not point at example.com.",
+      // description: "",
       recommended: false,
       formats: [oas3],
       given: "$.servers[*].url",
@@ -429,7 +444,8 @@ export default {
       },
     },
     "oas3-server-trailing-slash": {
-      description: "Server URL must not have trailing slash.",
+      message: "Server URL must not have trailing slash.",
+      // description: "",
       recommended: true,
       formats: [oas3],
       given: "$.servers[*].url",
@@ -441,8 +457,8 @@ export default {
       },
     },
     "oas3-valid-media-example": {
+      message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      message: "{{error}}",
       recommended: true,
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
@@ -461,8 +477,8 @@ export default {
       },
     },
     "oas3-valid-schema-example": {
+      message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      message: "{{error}}",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       recommended: true,
@@ -482,8 +498,9 @@ export default {
       },
     },
     "oas3-schema": {
-      description: "Validate structure of OpenAPI v3 specification.",
       message: "{{error}}.",
+      description:
+        "Validate the document against the OpenAPI v3 specification using the official JSON Schema version of the specification.",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       recommended: true,

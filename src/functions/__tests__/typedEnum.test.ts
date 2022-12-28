@@ -1,6 +1,6 @@
-import { typedEnum } from '../typedEnum';
-import { Document } from '@stoplight/spectral-core';
-import * as Parsers from '@stoplight/spectral-parsers';
+import { typedEnum } from "../typedEnum";
+import { Document } from "@stoplight/spectral-core";
+import * as Parsers from "@stoplight/spectral-parsers";
 
 function runTypedEnum(targetVal: any) {
   const doc = new Document(JSON.stringify(targetVal), Parsers.Json);
@@ -13,80 +13,86 @@ function runTypedEnum(targetVal: any) {
   });
 }
 
-describe('typedEnum', () => {
-  describe('parameters validation', () => {
-    test.each([1, { a: 1 }, 'nope', undefined])('is undefined when the enum is not an array (%s)', enumContent => {
-      const schema = {
-        type: 'integer',
-        enum: enumContent,
-      };
+describe("typedEnum", () => {
+  describe("parameters validation", () => {
+    test.each([1, { a: 1 }, "nope", undefined])(
+      "is undefined when the enum is not an array (%s)",
+      (enumContent) => {
+        const schema = {
+          type: "integer",
+          enum: enumContent,
+        };
 
-      expect(runTypedEnum(schema)).toBeUndefined();
-    });
+        expect(runTypedEnum(schema)).toBeUndefined();
+      }
+    );
   });
 
-  test('is undefined when the enum contains no value', () => {
+  test("is undefined when the enum contains no value", () => {
     const schema = {
-      type: 'integer',
+      type: "integer",
       enum: [],
     };
 
     expect(runTypedEnum(schema)).toBeUndefined();
   });
 
-  describe('basic', () => {
-    test('is undefined when all enum values respect the type', () => {
+  describe("basic", () => {
+    test("is undefined when all enum values respect the type", () => {
       const schema = {
-        type: 'integer',
+        type: "integer",
         enum: [123, 456],
       };
 
       expect(runTypedEnum(schema)).toBeUndefined();
     });
 
-    test('is undefined when all enum values respect the type', () => {
+    test("is undefined when all enum values respect the type", () => {
       const schema = {
-        type: 'integer',
+        type: "integer",
         enum: [123, 456],
       };
 
       expect(runTypedEnum(schema)).toBeUndefined();
     });
 
-    test.each([undefined])('is undefined when type is "%s"', (typeValue: unknown) => {
-      const schema = {
-        type: typeValue,
-        enum: [123, 456],
-      };
+    test.each([undefined])(
+      'is undefined when type is "%s"',
+      (typeValue: unknown) => {
+        const schema = {
+          type: typeValue,
+          enum: [123, 456],
+        };
 
-      expect(runTypedEnum(schema)).toBeUndefined();
-    });
+        expect(runTypedEnum(schema)).toBeUndefined();
+      }
+    );
 
-    test('identifies enum values which do not respect the type', () => {
+    test("identifies enum values which do not respect the type", () => {
       const schema = {
-        type: 'integer',
-        enum: [123, 'a string!', 456, 'and another one!'],
+        type: "integer",
+        enum: [123, "a string!", 456, "and another one!"],
       };
 
       expect(runTypedEnum(schema)).toEqual([
         {
-          message: 'Enum value "a string!" must be "integer".',
-          path: ['enum', 1],
+          message: 'Enum value "a string!" must be "integer"',
+          path: ["enum", 1],
         },
         {
-          message: 'Enum value "and another one!" must be "integer".',
-          path: ['enum', 3],
+          message: 'Enum value "and another one!" must be "integer"',
+          path: ["enum", 3],
         },
       ]);
     });
   });
 
-  describe('types', () => {
+  describe("types", () => {
     const testCases: Array<[string, unknown[], unknown]> = [
-      ['string', ['Hello', 'world!'], 12],
-      ['number', [-2147483648, 17.13], 'Hello'],
-      ['integer', [-2147483648, 17], 12.3],
-      ['boolean', [true, false], 1],
+      ["string", ["Hello", "world!"], 12],
+      ["number", [-2147483648, 17.13], "Hello"],
+      ["integer", [-2147483648, 17], 12.3],
+      ["boolean", [true, false], 1],
     ];
 
     test.each(testCases)(
@@ -98,7 +104,7 @@ describe('typedEnum', () => {
         };
 
         expect(runTypedEnum(schema)).toBeUndefined();
-      },
+      }
     );
 
     test.each(testCases)(
@@ -112,7 +118,7 @@ describe('typedEnum', () => {
         const results = runTypedEnum(schema);
 
         expect(results[0].message).toContain(`Enum value`);
-      },
+      }
     );
   });
 });

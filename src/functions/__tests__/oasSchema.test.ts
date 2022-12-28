@@ -225,7 +225,7 @@ describe("oasSchema", () => {
       }),
       expect.objectContaining({
         code: "oas3-valid-schema-example",
-        message: '"example" property type must be number',
+        message: '"example" property type must be number.',
         path: ["components", "schemas", "foo", "example"],
       }),
     ]);

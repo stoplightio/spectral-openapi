@@ -107,7 +107,7 @@ export const typedEnum = createRulesetFunction<Input, null>(
       results.push({
         message: `Enum value ${printValue(enumValues[i])} must be "${String(
           type
-        )}".`,
+        )}"`,
         path: [...context.path, "enum", i],
       });
     });

@@ -56,7 +56,7 @@ export const oasOpParams: IFunction = (params, _opts, { path }) => {
   for (const i of duplicates) {
     results.push({
       message:
-        'A parameter in this operation already exposes the same combination of "name" and "in" values.',
+        'A parameter in this operation already exposes the same combination of "name" and "in" values',
       path: [...path, i],
     });
   }
@@ -64,14 +64,14 @@ export const oasOpParams: IFunction = (params, _opts, { path }) => {
   if (count.body.length > 0 && count.formData.length > 0) {
     results.push({
       message:
-        'Operation must not have both "in:body" and "in:formData" parameters.',
+        'Operation must not have both "in:body" and "in:formData" parameters',
     });
   }
 
   for (let i = 1; i < count.body.length; i++) {
     results.push({
       message:
-        'Operation must not have more than a single instance of the "in:body" parameter.',
+        'Operation must not have more than a single instance of the "in:body" parameter',
       path: [...path, count.body[i]!], // we are indexing the array
     });
   }

@@ -1,5 +1,5 @@
-import type { IFunction, IFunctionResult } from '@stoplight/spectral-core';
-import { isObject } from './utils/isObject';
+import type { IFunction, IFunctionResult } from "@stoplight/spectral-core";
+import { isObject } from "./utils/isObject";
 
 export const oasDiscriminator: IFunction = (schema, _opts, { path }) => {
   /**
@@ -11,23 +11,29 @@ export const oasDiscriminator: IFunction = (schema, _opts, { path }) => {
 
   if (!isObject(schema)) return;
 
-  if (typeof schema.discriminator !== 'string') return;
+  if (typeof schema.discriminator !== "string") return;
 
   const discriminatorName = schema.discriminator;
 
   const results: IFunctionResult[] = [];
 
-  if (!isObject(schema.properties) || !Object.keys(schema.properties).some(k => k === discriminatorName)) {
+  if (
+    !isObject(schema.properties) ||
+    !Object.keys(schema.properties).some((k) => k === discriminatorName)
+  ) {
     results.push({
-      message: `The discriminator property must be defined in this schema.`,
-      path: [...path, 'properties'],
+      message: `The discriminator property must be defined in this schema`,
+      path: [...path, "properties"],
     });
   }
 
-  if (!Array.isArray(schema.required) || !schema.required.some(n => n === discriminatorName)) {
+  if (
+    !Array.isArray(schema.required) ||
+    !schema.required.some((n) => n === discriminatorName)
+  ) {
     results.push({
-      message: `The discriminator property must be in the required property list.`,
-      path: [...path, 'required'],
+      message: `The discriminator property must be in the required property list`,
+      path: [...path, "required"],
     });
   }
 

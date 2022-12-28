@@ -1,8 +1,11 @@
-import type { JsonPath } from '@stoplight/types';
-import { createRulesetFunction, IFunctionResult } from '@stoplight/spectral-core';
+import type { JsonPath } from "@stoplight/types";
+import {
+  createRulesetFunction,
+  IFunctionResult,
+} from "@stoplight/spectral-core";
 
-import { getAllOperations } from './utils/getAllOperations';
-import { isObject } from './utils/isObject';
+import { getAllOperations } from "./utils/getAllOperations";
+import { isObject } from "./utils/isObject";
 
 function _get(value: unknown, path: JsonPath): unknown {
   for (const segment of path) {
@@ -20,26 +23,29 @@ type Options = {
   schemesPath: JsonPath;
 };
 
-export default createRulesetFunction<{ paths: Record<string, unknown>; security: unknown[] }, Options>(
+export default createRulesetFunction<
+  { paths: Record<string, unknown>; security: unknown[] },
+  Options
+>(
   {
     input: {
-      type: 'object',
+      type: "object",
       properties: {
         paths: {
-          type: 'object',
+          type: "object",
         },
         security: {
-          type: 'array',
+          type: "array",
         },
       },
     },
     options: {
-      type: 'object',
+      type: "object",
       properties: {
         schemesPath: {
-          type: 'array',
+          type: "array",
           items: {
-            type: ['string', 'number'],
+            type: ["string", "number"],
           },
         },
       },
@@ -68,8 +74,10 @@ export default createRulesetFunction<{ paths: Record<string, unknown>; security:
         for (const securityKey of securityKeys) {
           if (!allDefs.includes(securityKey)) {
             results.push({
-              message: `API "security" values must match a scheme defined in the "${schemesPath.join('.')}" object.`,
-              path: ['security', index, securityKey],
+              message: `API "security" values must match a scheme defined in the "${schemesPath.join(
+                "."
+              )}" object`,
+              path: ["security", index, securityKey],
             });
           }
         }
@@ -96,9 +104,9 @@ export default createRulesetFunction<{ paths: Record<string, unknown>; security:
           if (!allDefs.includes(securityKey)) {
             results.push({
               message: `Operation "security" values must match a scheme defined in the "${schemesPath.join(
-                '.',
-              )}" object.`,
-              path: ['paths', path, operation, 'security', index, securityKey],
+                "."
+              )}" object`,
+              path: ["paths", path, operation, "security", index, securityKey],
             });
           }
         }
@@ -106,5 +114,5 @@ export default createRulesetFunction<{ paths: Record<string, unknown>; security:
     }
 
     return results;
-  },
+  }
 );

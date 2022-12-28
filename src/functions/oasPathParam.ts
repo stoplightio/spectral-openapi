@@ -57,7 +57,7 @@ const ensureAllDefinedPathParamsAreUsedInPath = (
       const resPath = params[p];
       results.push(
         generateResult(
-          `Parameter "${p}" must be used in path "${path}".`,
+          `Parameter "${p}" must be used in path "${path}"`,
           resPath
         )
       );
@@ -76,7 +76,7 @@ const ensureAllExpectedParamsInPathAreDefined = (
     if (!(p in params)) {
       results.push(
         generateResult(
-          `Operation must define parameter "{${p}}" as expected by path "${path}".`,
+          `Operation must define parameter "{${p}}" as expected by path "${path}"`,
           operationPath
         )
       );
@@ -124,7 +124,7 @@ export const oasPathParam: IFunction = (targetVal) => {
         generateResult(
           `Paths "${String(
             uniquePaths[normalized]
-          )}" and "${path}" must not be equivalent.`,
+          )}" and "${path}" must not be equivalent`,
           ["paths", path]
         )
       );
@@ -141,7 +141,7 @@ export const oasPathParam: IFunction = (targetVal) => {
       if (pathElements.includes(p)) {
         results.push(
           generateResult(
-            `Path "${path}" must not use parameter "{${p}}" multiple times.`,
+            `Path "${path}" must not use parameter "{${p}}" multiple times`,
             ["paths", path]
           )
         );
@@ -231,9 +231,9 @@ function generateResult(
 }
 
 const requiredMessage = (name: string) =>
-  `Path parameter "${name}" must have "required" property that is set to "true".` as const;
+  `Path parameter "${name}" must have "required" property that is set to "true"` as const;
 
 const uniqueDefinitionMessage = (name: string) =>
-  `Path parameter "${name}" must not be defined multiple times.` as const;
+  `Path parameter "${name}" must not be defined multiple times` as const;
 
 export default oasPathParam;

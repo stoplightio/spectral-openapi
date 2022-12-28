@@ -40,7 +40,7 @@ export default createRulesetFunction<Tags, null>(
     for (const duplicatedIndex of duplicatedTags) {
       const duplicatedTag = targetVal[duplicatedIndex]!.name; // duplicatedIndex has been generated and validated elsewhere
       results.push({
-        message: `"tags" object contains duplicate tag name "${duplicatedTag}".`,
+        message: `"tags" object contains duplicate tag name "${duplicatedTag}"`,
         path: [...ctx.path, duplicatedIndex, "name"],
       });
     }
