@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("no-$ref-siblings", [
+testRule("no-ref-siblings", [
   {
     name: "valid case",
     document: {
@@ -113,7 +113,6 @@ testRule("no-$ref-siblings", [
         severity: DiagnosticSeverity.Error,
       },
       {
-        code: "no-$ref-siblings",
         message: "$ref must not be placed next to any other properties",
         path: ["paths", "/path", "get", "security"],
         severity: DiagnosticSeverity.Error,

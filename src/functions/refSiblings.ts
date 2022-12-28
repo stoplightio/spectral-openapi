@@ -2,18 +2,19 @@ import type { JsonPath } from "@stoplight/types";
 import type { IFunction, IFunctionResult } from "@stoplight/spectral-core";
 import { isObject } from "./utils/isObject";
 
-function getParentValue(document: unknown, fullPath: JsonPath): unknown {
-  if (fullPath.length === 0) {
+function getParentValue(document: unknown, path: JsonPath): unknown {
+  if (path.length === 0) {
     return null;
   }
 
   let piece = document;
 
-  for (const path of fullPath) {
+  for (let i = 0; i < path.length - 1; i += 1) {
     if (!isObject(piece)) {
       return null;
     }
-    piece = piece[path];
+
+    piece = piece[path[i]!]; // TS seems confused by array access but for loop protects from unexpected access
   }
 
   return piece;

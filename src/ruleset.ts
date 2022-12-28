@@ -177,7 +177,7 @@ export default {
         },
       },
     },
-    "no-$ref-siblings": {
+    "no-ref-siblings": {
       formats: [oas2, oas3_0],
       description: "Property must not be placed among $ref",
       message: "{{error}}",
