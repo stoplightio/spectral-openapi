@@ -1,0 +1,33 @@
+{
+  "extends": "@sindresorhus/tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "target": "ES2019",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "lib": ["es2021"],
+    "strict": true,
+    "pretty": true,
+    "allowUnreachableCode": false,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "noEmitHelpers": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true
+  }
+}
