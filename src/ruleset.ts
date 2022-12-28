@@ -27,7 +27,7 @@ import {
 
 export default {
   documentationUrl:
-    "https://docs.stoplight.io/docs/spectral/docs/reference/openapi-rules.md",
+    "https://meta.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules",
   formats: [oas2, oas3, oas3_0, oas3_1],
   aliases: {
     PathItem: ["$.paths[*]"],
@@ -36,58 +36,10 @@ export default {
     ],
   },
   rules: {
-    "oas2-operation-formData-consume-check": {
-      // messsage: ".",
-      description:
-        'Operations with "in: formData" parameter must include "application/x-www-form-urlencoded" or "multipart/form-data" in their "consumes" property.',
-      recommended: true,
-      formats: [oas2],
-      given: "#OperationObject",
-      then: {
-        function: oasOpFormDataConsumeCheck,
-      },
-    },
-    "operation-operationId-unique": {
-      // messsage: "",
-      description: 'Every operation must have unique "operationId".',
-      recommended: true,
-      severity: DiagnosticSeverity.Error,
-      given: "$",
-      then: {
-        function: oasOpIdUnique,
-      },
-    },
-    "operation-parameters": {
-      message: "{{error}}.",
-      description: "Operation parameters are unique and non-repeating.",
-      recommended: true,
-      given: "#OperationObject.parameters",
-      then: {
-        function: oasOpParams,
-      },
-    },
-    "operation-tag-defined": {
-      message: "Operation tags must be defined in global tags.",
-      // description: ".",
-      recommended: true,
-      given: "$",
-      then: {
-        function: oasTagDefined,
-      },
-    },
-    "path-params": {
-      message: "{{error}}.",
-      description: "Path parameters must be defined and valid.",
-      severity: DiagnosticSeverity.Error,
-      recommended: true,
-      given: "$",
-      then: {
-        function: oasPathParam,
-      },
-    },
     "duplicated-entry-in-enum": {
       message: "{{error}}.",
-      description: "Enum values must not have duplicate entry.",
+      description:
+        "Enum must not have duplicate entries. Duplicates can break various tools in the chain depending on how well they're built and which language they're written in. This will be especially problematic for code generation tooling.",
       severity: DiagnosticSeverity.Warning,
       recommended: true,
       given: ["$..[?(@property !== 'properties' && @ && @.enum)]"],
@@ -100,6 +52,49 @@ export default {
             uniqueItems: true,
           },
         },
+      },
+    },
+    "oas2-operation-formData-consume-check": {
+      message:
+        "Operations with formData must declare a content type that accepts form data.",
+      description:
+        "Operations with `in: formData` parameter must include `application/x-www-form-urlencoded` or `multipart/form-data` in the `consumes` property.",
+      recommended: true,
+      formats: [oas2],
+      given: "#OperationObject",
+      then: {
+        function: oasOpFormDataConsumeCheck,
+      },
+    },
+    "operation-operationId-unique": {
+      message: 'Multiple operations exist with operationId "{{value}}".',
+      description:
+        "Unique string used to identify the operation. The id MUST be unique among all operations described in the API. Tools and libraries may use the operationId to uniquely identify an operation, therefore, it is recommended to follow common programming naming conventions.",
+      recommended: true,
+      severity: DiagnosticSeverity.Error,
+      given: "$",
+      then: {
+        function: oasOpIdUnique,
+      },
+    },
+    "operation-parameters": {
+      message: "{{error}}.",
+      description:
+        "Operation parameters must be unique for their type, e.g. you could have a property called `name` in both the path and the query string, but cannot have two path parameters with the same name.",
+      recommended: true,
+      given: "#OperationObject.parameters",
+      then: {
+        function: oasOpParams,
+      },
+    },
+    "path-params": {
+      message: "{{error}}.",
+      description: "Path parameters must be defined and valid.",
+      severity: DiagnosticSeverity.Error,
+      recommended: true,
+      given: "$",
+      then: {
+        function: oasPathParam,
       },
     },
     "no-eval-in-markdown": {

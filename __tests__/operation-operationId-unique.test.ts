@@ -41,7 +41,7 @@ testRule("operation-operationId-unique", [
     },
     errors: [
       {
-        message: 'Every operation must have unique "operationId".',
+        message: 'Multiple operations exist with operationId "id1".',
         path: ["paths", "/path2", "get", "operationId"],
         severity: DiagnosticSeverity.Error,
       },
@@ -65,7 +65,7 @@ testRule("operation-operationId-unique", [
     },
     errors: [
       {
-        message: 'Every operation must have unique "operationId".',
+        message: 'Multiple operations exist with operationId "id1".',
         path: ["paths", "/path1", "post", "operationId"],
         severity: DiagnosticSeverity.Error,
       },
