@@ -2,8 +2,6 @@ import { DiagnosticSeverity } from "@stoplight/types";
 import { oas2, oas3, oas3_0, oas3_1 } from "@stoplight/spectral-formats";
 import {
   pattern,
-  schema,
-  truthy,
   undefined,
   unreferencedReusableObject,
   xor,
@@ -18,7 +16,6 @@ import {
   oasOpSecurityDefined,
   oasPathParam,
   oasSchema,
-  oasTagDefined,
   oasUnusedComponent,
   refSiblings,
   typedEnum,
@@ -41,7 +38,6 @@ export default {
       description:
         "Enum must not have duplicate entries. Duplicates can break various tools in the chain depending on how well they're built and which language they're written in. This will be especially problematic for code generation tooling.",
       severity: DiagnosticSeverity.Warning,
-      recommended: true,
       given: ["$..[?(@property !== 'properties' && @ && @.enum)]"],
       then: {
         field: "enum",
@@ -59,7 +55,7 @@ export default {
         "Operations with formData must declare a content type that accepts form data.",
       description:
         "Operations with `in: formData` parameter must include `application/x-www-form-urlencoded` or `multipart/form-data` in the `consumes` property.",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "#OperationObject",
       then: {
@@ -70,7 +66,6 @@ export default {
       message: 'Multiple operations exist with operationId "{{value}}".',
       description:
         "Unique string used to identify the operation. The id MUST be unique among all operations described in the API. Tools and libraries may use the operationId to uniquely identify an operation, therefore, it is recommended to follow common programming naming conventions.",
-      recommended: true,
       severity: DiagnosticSeverity.Error,
       given: "$",
       then: {
@@ -81,7 +76,7 @@ export default {
       message: "{{error}}.",
       description:
         "Operation parameters must be unique for their type, e.g. you could have a property called `name` in both the path and the query string, but cannot have two path parameters with the same name.",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       given: "#OperationObject.parameters",
       then: {
         function: oasOpParams,
@@ -91,16 +86,16 @@ export default {
       message: "{{error}}.",
       description: "Path parameters must be defined and valid.",
       severity: DiagnosticSeverity.Error,
-      recommended: true,
       given: "$",
       then: {
         function: oasPathParam,
       },
     },
     "no-eval-in-markdown": {
-      message: 'Markdown descriptions must not have "eval(".',
-      // description: "",
-      recommended: true,
+      message: 'Markdown description contains "eval(".',
+      description:
+        "Potential cross-site scripting issues can happen when JavaScript like `eval()` is embedded in Markdown/HTML.",
+      severity: DiagnosticSeverity.Warning,
       given: "$..[description,title]",
       then: {
         function: pattern,
@@ -110,9 +105,10 @@ export default {
       },
     },
     "no-script-tags-in-markdown": {
-      message: 'Markdown descriptions must not have "<script>" tags.',
-      // description: "",
-      recommended: true,
+      message: 'Markdown description contains "<script>" tag.',
+      description:
+        "Potential cross-site scripting issues can happen when JavaScript like `<script>` is embedded in Markdown/HTML.",
+      severity: DiagnosticSeverity.Warning,
       given: "$..[description,title]",
       then: {
         function: pattern,
@@ -123,29 +119,19 @@ export default {
     },
     "openapi-tags-uniqueness": {
       message: "{{error}}.",
-      description: "Each tag must have a unique name.",
+      description:
+        "According to the OpenAPI specification each tag name in the list MUST be unique.",
       severity: DiagnosticSeverity.Error,
-      recommended: true,
       given: "$.tags",
       then: {
         function: uniquenessTags,
       },
     },
-    "operation-operationId": {
-      message: 'Operation must have "operationId".',
-      // description: "",
-      recommended: true,
-      given: "#OperationObject",
-      then: {
-        field: "operationId",
-        function: truthy,
-      },
-    },
     "path-declarations-must-exist": {
-      message:
-        'Path parameter declarations must not be empty, ex."/given/{}" is invalid.',
-      // description: "",
-      recommended: true,
+      message: "Path parameters need to contain a name.",
+      description:
+        'When paths parameters are defined in the path they need a name between the curly braces, so that they can be matched up to an entry in parameters. For example, "/widgets/{}" is invalid.',
+      severity: DiagnosticSeverity.Warning,
       given: "$.paths",
       then: {
         field: "@key",
@@ -157,8 +143,9 @@ export default {
     },
     "path-keys-no-trailing-slash": {
       message: "Path must not end with slash.",
-      // description: "",
-      recommended: true,
+      description:
+        "Skip the / at the end of the path, because most web application frameworks consider /foo and /foo/ to be the same thing, and defining that last / is just asking for confusion.",
+      severity: DiagnosticSeverity.Warning,
       given: "$.paths",
       then: {
         field: "@key",
@@ -170,8 +157,9 @@ export default {
     },
     "path-not-include-query": {
       message: "Path must not include query string.",
-      // description: "",
-      recommended: true,
+      description:
+        "Defining a query string in the path directly in unspecified behavior. The OpenAPI Specificaction does not explicity forbid it, but it also does not say it is possible, and most tooling will break if you use this. Whenever uncertainty like this occurs, it is best to use the specified approach, and define query string parameters with `parameters` and `- in: query`.",
+      severity: DiagnosticSeverity.Warning,
       given: "$.paths",
       then: {
         field: "@key",
@@ -183,10 +171,10 @@ export default {
     },
     "no-ref-siblings": {
       message: "{{error}}.",
-      description: "Property must not be placed among $ref",
+      description:
+        "In older versions of OpenAPI (v2 and v3.0) it was not permitted to place any keywords next to `$ref`. Some tools would ignore them, some would incorrectly merge them, but behavior differed between tools. In v3.1 `$ref` siblings are permitted inside `schema` and in some other locations. Please refer to the specification for more information.",
       formats: [oas2, oas3_0],
       severity: DiagnosticSeverity.Error,
-      recommended: true,
       resolved: false,
       given: "$..[?(@property === '$ref')]",
       then: {
@@ -195,74 +183,29 @@ export default {
     },
     "typed-enum": {
       message: "{{error}}.",
-      description: "Enum values must respect the specified type.",
-      recommended: true,
+      description:
+        "Enum values must respect the specified type, meaning if the enum is a string then the values cannot be integers or arrays.",
+      severity: DiagnosticSeverity.Warning,
       given: "$..[?(@ && @.enum && @.type)]",
       then: {
         function: typedEnum,
       },
     },
-    "oas2-api-host": {
-      message: 'OpenAPI "host" must be present and non-empty string.',
-      // description: "",
-      recommended: true,
-      formats: [oas2],
-      given: "$",
-      then: {
-        field: "host",
-        function: truthy,
-      },
-    },
-    "oas2-api-schemes": {
-      message: 'OpenAPI host "schemes" must be present and non-empty array.',
-      // description: "",
-      recommended: true,
-      formats: [oas2],
-      given: "$",
-      then: {
-        field: "schemes",
-        function: schema,
-        functionOptions: {
-          dialect: "draft7",
-          schema: {
-            items: {
-              type: "string",
-            },
-            minItems: 1,
-            type: "array",
-          },
-        },
-      },
-    },
     "oas2-discriminator": {
       message: "{{error}}.",
       description: "discriminator property must be defined and required",
-      recommended: true,
-      formats: [oas2],
       severity: DiagnosticSeverity.Error,
+      formats: [oas2],
       given: "$.definitions[?(@.discriminator)]",
       then: {
         function: oasDiscriminator,
       },
     },
-    "oas2-host-not-example": {
-      message: "Host URL must not point at example.com.",
-      // description: "",
-      recommended: false,
-      formats: [oas2],
-      given: "$",
-      then: {
-        field: "host",
-        function: pattern,
-        functionOptions: {
-          notMatch: "example\\.com",
-        },
-      },
-    },
+
     "oas2-host-trailing-slash": {
       message: "Server URL must not have trailing slash.",
       // description: "",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$",
       then: {
@@ -277,7 +220,7 @@ export default {
       message: "{{error}}.",
       description:
         'Operation "security" values must match a scheme defined in the "securityDefinitions" object.',
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$",
       then: {
@@ -290,9 +233,8 @@ export default {
     "oas2-valid-schema-example": {
       message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      recommended: true,
-      formats: [oas2],
       severity: DiagnosticSeverity.Error,
+      formats: [oas2],
       given: [
         "$..definitions..[?(@property !== 'properties' && @ && (@.example !== void 0 || @['x-example'] !== void 0 || @.default !== void 0) && (@.enum || @.type || @.format || @.$ref || @.properties || @.items))]",
         "$..parameters..[?(@property !== 'properties' && @ && (@.example !== void 0 || @['x-example'] !== void 0 || @.default !== void 0) && (@.enum || @.type || @.format || @.$ref || @.properties || @.items))]",
@@ -310,9 +252,8 @@ export default {
     "oas2-valid-media-example": {
       message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      recommended: true,
-      formats: [oas2],
       severity: DiagnosticSeverity.Error,
+      formats: [oas2],
       given: "$..responses..[?(@ && @.schema && @.examples)]",
       then: {
         function: oasExample,
@@ -327,7 +268,7 @@ export default {
       message: '"anyOf" keyword must not be used in OpenAPI v2 document.',
       description:
         "anyOf is not available in OpenAPI v2, it was added in OpenAPI v3",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$..anyOf",
       then: {
@@ -338,7 +279,7 @@ export default {
       message: '"oneOf" keyword must not be used in OpenAPI v2 document.',
       description:
         "oneOf is not available in OpenAPI v2, it was added in OpenAPI v3",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$..oneOf",
       then: {
@@ -347,10 +288,10 @@ export default {
     },
     "oas2-schema": {
       message: "{{error}}.",
-      description: "Validate structure of OpenAPI v2 specification.",
-      recommended: true,
-      formats: [oas2],
+      description:
+        "Validate the document against the OpenAPI v2 specification using the official JSON Schema version of the specification.",
       severity: DiagnosticSeverity.Error,
+      formats: [oas2],
       given: "$",
       then: {
         function: oasDocumentSchema,
@@ -358,8 +299,9 @@ export default {
     },
     "oas2-unused-definition": {
       message: "Potentially unused definition has been detected.",
-      // description: "",
-      recommended: true,
+      description:
+        'Unused definitions are essentially "dead code" and should be avoided, as people might start using them thinking they are production ready despite them being dead code for an unknown amount of time.',
+      severity: DiagnosticSeverity.Warning,
       resolved: false,
       formats: [oas2],
       given: "$.definitions",
@@ -370,31 +312,11 @@ export default {
         },
       },
     },
-    "oas3-api-servers": {
-      message: 'OpenAPI "servers" must be present and non-empty array.',
-      // description: "",
-      recommended: true,
-      formats: [oas3],
-      given: "$",
-      then: {
-        field: "servers",
-        function: schema,
-        functionOptions: {
-          dialect: "draft7",
-          schema: {
-            items: {
-              type: "object",
-            },
-            minItems: 1,
-            type: "array",
-          },
-        },
-      },
-    },
+
     "oas3-examples-value-or-externalValue": {
       message: 'Examples must have either "value" or "externalValue" field.',
       // description: "",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: [
         "$.components.examples[*]",
@@ -415,7 +337,7 @@ export default {
       message: "{{error}}.",
       description:
         'Operation "security" values must match a scheme defined in the "components.securitySchemes" object.',
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: "$",
       then: {
@@ -428,6 +350,7 @@ export default {
     "oas3-server-not-example.com": {
       message: "Server URL must not point at example.com.",
       // description: "",
+      severity: DiagnosticSeverity.Warning,
       recommended: false,
       formats: [oas3],
       given: "$.servers[*].url",
@@ -441,7 +364,7 @@ export default {
     "oas3-server-trailing-slash": {
       message: "Server URL must not have trailing slash.",
       // description: "",
-      recommended: true,
+      severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: "$.servers[*].url",
       then: {
@@ -454,7 +377,6 @@ export default {
     "oas3-valid-media-example": {
       message: "{{error}}.",
       description: "Examples must be valid against their defined schema.",
-      recommended: true,
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: [
@@ -476,7 +398,6 @@ export default {
       description: "Examples must be valid against their defined schema.",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
-      recommended: true,
       given: [
         "$.components.schemas..[?(@property !== 'properties' && @ && (@ && @.example !== void 0 || @.default !== void 0) && (@.enum || @.type || @.format || @.$ref || @.properties || @.items))]",
         "$..content..[?(@property !== 'properties' && @ && (@ && @.example !== void 0 || @.default !== void 0) && (@.enum || @.type || @.format || @.$ref || @.properties || @.items))]",
@@ -498,7 +419,6 @@ export default {
         "Validate the document against the OpenAPI v3 specification using the official JSON Schema version of the specification.",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
-      recommended: true,
       given: "$",
       then: {
         function: oasDocumentSchema,
@@ -506,7 +426,9 @@ export default {
     },
     "oas3-unused-component": {
       message: "Potentially unused component has been detected.",
-      recommended: true,
+      description:
+        'Unused definitions are essentially "dead code" and should be avoided, as people might start using them thinking they are production ready despite them being dead code for an unknown amount of time.',
+      severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       resolved: false,
       given: "$",

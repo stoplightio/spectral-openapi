@@ -25,7 +25,7 @@ testRule("no-script-tags-in-markdown", [
     },
     errors: [
       {
-        message: 'Markdown descriptions must not have "<script>" tags.',
+        message: 'Markdown description contains "<script>" tag.',
         path: ["info", "description"],
         severity: DiagnosticSeverity.Warning,
       },

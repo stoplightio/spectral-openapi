@@ -19,9 +19,7 @@ testRule("path-declarations-must-exist", [
     },
     errors: [
       {
-        code: "path-declarations-must-exist",
-        message:
-          'Path parameter declarations must not be empty, ex."/given/{}" is invalid.',
+        message: "Path parameters need to contain a name.",
         path: ["paths", "/path/{}"],
 
         severity: DiagnosticSeverity.Warning,

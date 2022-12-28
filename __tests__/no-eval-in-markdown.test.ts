@@ -27,7 +27,7 @@ testRule("no-eval-in-markdown", [
     },
     errors: [
       {
-        message: 'Markdown descriptions must not have "eval(".',
+        message: 'Markdown description contains "eval(".',
         path: ["info", "title"],
         severity: DiagnosticSeverity.Warning,
       },
@@ -46,7 +46,7 @@ testRule("no-eval-in-markdown", [
     },
     errors: [
       {
-        message: 'Markdown descriptions must not have "eval(".',
+        message: 'Markdown description contains "eval(".',
         path: ["info", "description"],
         severity: DiagnosticSeverity.Warning,
       },
