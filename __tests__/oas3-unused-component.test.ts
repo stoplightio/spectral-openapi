@@ -3,6 +3,9 @@ import * as path from "@stoplight/path";
 import * as Parsers from "@stoplight/spectral-parsers";
 import { Document } from "@stoplight/spectral-core";
 
+/*eslint-env jest*/
+jest.mock("fs");
+
 import testRule from "./__helpers__/helper";
 
 const remoteLocalDocument = new Document<any, any>(
@@ -83,13 +86,13 @@ testRule("oas3-unused-component", [
 
   {
     name: "all components are referenced",
-    document: require("../../__tests__/__fixtures__/unusedComponent.negative.json"),
+    document: require("./__fixtures__/unusedShared/unusedComponent.negative.json"),
     errors: [],
   },
 
   {
     name: "orphaned components",
-    document: require("../../__tests__/__fixtures__/unusedComponent.json"),
+    document: require("./__fixtures__/unusedShared/unusedComponent.json"),
 
     errors: [
       {

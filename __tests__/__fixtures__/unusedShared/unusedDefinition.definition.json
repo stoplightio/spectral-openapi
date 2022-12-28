@@ -1,8 +1,1 @@
-{
-  "swagger": "2.0",
-  "definitions": {
-    "ExternalFs": {
-      "type": "number"
-    }
-  }
-}
+{"swagger":"2.0","definitions":{"ExternalFs":{"type":"number"}}}

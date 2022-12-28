@@ -4,6 +4,9 @@ import { Document } from "@stoplight/spectral-core";
 import * as Parsers from "@stoplight/spectral-parsers";
 import testRule from "./__helpers__/helper";
 
+/*eslint-env jest*/
+jest.mock("fs");
+
 const remoteLocalDocument = new Document<any, any>(
   JSON.stringify(
     require("./__fixtures__/unusedShared/unusedDefinition.remoteLocal.json")
