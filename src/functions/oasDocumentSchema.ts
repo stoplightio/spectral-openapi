@@ -51,17 +51,16 @@ export function prepareResults(errors: ErrorObject[]): void {
   }
 
   for (let i = 0; i < errors.length; i++) {
-    const error = errors[i];
+    const error = errors[i]!; // usage of i was confusing TS into thinking it may be undefined
 
     if (
       i + 1 < errors.length &&
-      errors[i + 1]?.instancePath === error?.instancePath
+      errors[i + 1]?.instancePath === error.instancePath
     ) {
       errors.splice(i + 1, 1);
       i--;
     } else if (
       i > 0 &&
-      error && // TODO(ps) safety rampage
       shouldIgnoreError(error) &&
       errors[i - 1]?.instancePath.startsWith(error.instancePath)
     ) {

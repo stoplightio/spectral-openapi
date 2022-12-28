@@ -1,8 +1,6 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import { oas2, oas3, oas3_0, oas3_1 } from "@stoplight/spectral-formats";
 import {
-  alphabetical,
-  length,
   pattern,
   schema,
   truthy,
@@ -18,14 +16,13 @@ import {
   oasOpIdUnique,
   oasOpParams,
   oasOpSecurityDefined,
-  oasOpSuccessResponse,
   oasPathParam,
   oasSchema,
   oasTagDefined,
   oasUnusedComponent,
   refSiblings,
   typedEnum,
-  uniquenessTags, // TODO copied from rulesets/shared, could be moved into core?
+  uniquenessTags, // TODO(ps) copied from rulesets/shared, could be moved into core?
 } from "./functions";
 
 export default {
@@ -39,15 +36,6 @@ export default {
     ],
   },
   rules: {
-    "operation-success-response": {
-      description: 'Operation must have at least one "2xx" or "3xx" response.',
-      recommended: true,
-      given: "#OperationObject",
-      then: {
-        field: "responses",
-        function: oasOpSuccessResponse,
-      },
-    },
     "oas2-operation-formData-consume-check": {
       description:
         'Operations with "in: formData" parameter must include "application/x-www-form-urlencoded" or "multipart/form-data" in their "consumes" property.',
@@ -94,25 +82,6 @@ export default {
         function: oasPathParam,
       },
     },
-    "contact-properties": {
-      description: 'Contact object must have "name", "url" and "email".',
-      recommended: false,
-      given: "$.info.contact",
-      then: [
-        {
-          field: "name",
-          function: truthy,
-        },
-        {
-          field: "url",
-          function: truthy,
-        },
-        {
-          field: "email",
-          function: truthy,
-        },
-      ],
-    },
     "duplicated-entry-in-enum": {
       description: "Enum values must not have duplicate entry.",
       severity: DiagnosticSeverity.Warning,
@@ -128,42 +97,6 @@ export default {
             uniqueItems: true,
           },
         },
-      },
-    },
-    "info-contact": {
-      description: 'Info object must have "contact" object.',
-      recommended: true,
-      given: "$",
-      then: {
-        field: "info.contact",
-        function: truthy,
-      },
-    },
-    "info-description": {
-      description: 'Info "description" must be present and non-empty string.',
-      recommended: true,
-      given: "$",
-      then: {
-        field: "info.description",
-        function: truthy,
-      },
-    },
-    "info-license": {
-      description: 'Info object must have "license" object.',
-      recommended: false,
-      given: "$",
-      then: {
-        field: "info.license",
-        function: truthy,
-      },
-    },
-    "license-url": {
-      description: 'License object must include "url".',
-      recommended: false,
-      given: "$",
-      then: {
-        field: "info.license.url",
-        function: truthy,
       },
     },
     "no-eval-in-markdown": {
@@ -188,18 +121,6 @@ export default {
         },
       },
     },
-    "openapi-tags-alphabetical": {
-      description: 'OpenAPI object must have alphabetical "tags".',
-      recommended: false,
-      given: "$",
-      then: {
-        field: "tags",
-        function: alphabetical,
-        functionOptions: {
-          keyedBy: "name",
-        },
-      },
-    },
     "openapi-tags-uniqueness": {
       description: "Each tag must have a unique name.",
       message: "{{error}}",
@@ -210,32 +131,6 @@ export default {
         function: uniquenessTags,
       },
     },
-    "openapi-tags": {
-      description: 'OpenAPI object must have non-empty "tags" array.',
-      recommended: false,
-      given: "$",
-      then: {
-        field: "tags",
-        function: schema,
-        functionOptions: {
-          dialect: "draft7",
-          schema: {
-            type: "array",
-            minItems: 1,
-          },
-        },
-      },
-    },
-    "operation-description": {
-      description:
-        'Operation "description" must be present and non-empty string.',
-      recommended: true,
-      given: "#OperationObject",
-      then: {
-        field: "description",
-        function: truthy,
-      },
-    },
     "operation-operationId": {
       description: 'Operation must have "operationId".',
       recommended: true,
@@ -243,47 +138,6 @@ export default {
       then: {
         field: "operationId",
         function: truthy,
-      },
-    },
-    "operation-operationId-valid-in-url": {
-      message:
-        "operationId must not characters that are invalid when used in URL.",
-      recommended: true,
-      given: "#OperationObject",
-      then: {
-        field: "operationId",
-        function: pattern,
-        functionOptions: {
-          match: "^[A-Za-z0-9-._~:/?#\\[\\]@!\\$&'()*+,;=]*$",
-        },
-      },
-    },
-    "operation-singular-tag": {
-      description: "Operation must not have more than a single tag.",
-      recommended: false,
-      given: "#OperationObject",
-      then: {
-        field: "tags",
-        function: length,
-        functionOptions: {
-          max: 1,
-        },
-      },
-    },
-    "operation-tags": {
-      description: 'Operation must have non-empty "tags" array.',
-      recommended: true,
-      given: "#OperationObject",
-      then: {
-        field: "tags",
-        function: schema,
-        functionOptions: {
-          dialect: "draft7",
-          schema: {
-            type: "array",
-            minItems: 1,
-          },
-        },
       },
     },
     "path-declarations-must-exist": {
@@ -321,15 +175,6 @@ export default {
         functionOptions: {
           notMatch: "\\?",
         },
-      },
-    },
-    "tag-description": {
-      description: 'Tag object must have "description".',
-      recommended: false,
-      given: "$.tags[*]",
-      then: {
-        field: "description",
-        function: truthy,
       },
     },
     "no-$ref-siblings": {
@@ -419,16 +264,6 @@ export default {
         functionOptions: {
           notMatch: "/$",
         },
-      },
-    },
-    "oas2-parameter-description": {
-      description: 'Parameter objects must have "description".',
-      recommended: false,
-      formats: [oas2],
-      given: "$..parameters[?(@ && @.in)]",
-      then: {
-        field: "description",
-        function: truthy,
       },
     },
     "oas2-operation-security-defined": {
@@ -579,20 +414,6 @@ export default {
         functionOptions: {
           schemesPath: ["components", "securitySchemes"],
         },
-      },
-    },
-    "oas3-parameter-description": {
-      description: 'Parameter objects must have "description".',
-      recommended: false,
-      formats: [oas3],
-      given: [
-        "#PathItem.parameters[?(@ && @.in)]",
-        "#OperationObject.parameters[?(@ && @.in)]",
-        "$.components.parameters[?(@ && @.in)]",
-      ],
-      then: {
-        field: "description",
-        function: truthy,
       },
     },
     "oas3-server-not-example.com": {

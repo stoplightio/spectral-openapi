@@ -2,7 +2,6 @@ import { default as oasOpParams } from "./oasOpParams";
 import { default as oasSchema } from "./oasSchema";
 import { default as oasDocumentSchema } from "./oasDocumentSchema";
 import { default as oasOpFormDataConsumeCheck } from "./oasOpFormDataConsumeCheck";
-import { default as oasOpSuccessResponse } from "./oasOpSuccessResponse";
 import { default as oasExample } from "./oasExample";
 import { default as oasOpSecurityDefined } from "./oasOpSecurityDefined";
 import { default as typedEnum } from "./typedEnum";
@@ -22,7 +21,6 @@ export {
   oasOpIdUnique,
   oasOpParams,
   oasOpSecurityDefined,
-  oasOpSuccessResponse,
   oasPathParam,
   oasSchema,
   oasTagDefined,
