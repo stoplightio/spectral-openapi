@@ -204,7 +204,8 @@ export default {
 
     "oas2-host-trailing-slash": {
       message: "Server URL must not have trailing slash.",
-      // description: "",
+      description:
+        "Adding a trailing slash to the API server URL can confuse some tools, which will concat the server and the path (which already has a preceeding slash). This can lead to confusing errors where the full server + path looks like `https://example.com//widgets`.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$",
@@ -267,7 +268,7 @@ export default {
     "oas2-anyOf": {
       message: '"anyOf" keyword must not be used in OpenAPI v2 document.',
       description:
-        "anyOf is not available in OpenAPI v2, it was added in OpenAPI v3",
+        "anyOf is not available in OpenAPI v2, it was added in OpenAPI v3.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$..anyOf",
@@ -278,7 +279,7 @@ export default {
     "oas2-oneOf": {
       message: '"oneOf" keyword must not be used in OpenAPI v2 document.',
       description:
-        "oneOf is not available in OpenAPI v2, it was added in OpenAPI v3",
+        "oneOf is not available in OpenAPI v2, it was added in OpenAPI v3.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas2],
       given: "$..oneOf",
@@ -315,7 +316,8 @@ export default {
 
     "oas3-examples-value-or-externalValue": {
       message: 'Examples must have either "value" or "externalValue" field.',
-      // description: "",
+      description:
+        "The OpenAPI specification allows either `value` or `externalValue`, but not both at once.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: [
@@ -336,7 +338,7 @@ export default {
     "oas3-operation-security-defined": {
       message: "{{error}}.",
       description:
-        'Operation "security" values must match a scheme defined in the "components.securitySchemes" object.',
+        'Operation "security" values must match a scheme defined in the `components.securitySchemes` object.',
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: "$",
@@ -347,23 +349,10 @@ export default {
         },
       },
     },
-    "oas3-server-not-example.com": {
-      message: "Server URL must not point at example.com.",
-      // description: "",
-      severity: DiagnosticSeverity.Warning,
-      recommended: false,
-      formats: [oas3],
-      given: "$.servers[*].url",
-      then: {
-        function: pattern,
-        functionOptions: {
-          notMatch: "example\\.com",
-        },
-      },
-    },
     "oas3-server-trailing-slash": {
       message: "Server URL must not have trailing slash.",
-      // description: "",
+      description:
+        "Adding a trailing slash to the API server URL can confuse some tools, which will concat the server and the path (which already has a preceeding slash). This can lead to confusing errors where the full server + path looks like `https://example.com//widgets`.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: "$.servers[*].url",

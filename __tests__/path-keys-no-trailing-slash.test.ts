@@ -19,7 +19,7 @@ testRule("path-keys-no-trailing-slash", [
     },
     errors: [
       {
-        message: "Path /path/ must not end with slash.",
+        message: "Path must not end with slash.",
         path: ["paths", "/path/"],
         severity: DiagnosticSeverity.Warning,
       },
