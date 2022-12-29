@@ -2,7 +2,9 @@
 
 [![NPM Downloads](https://img.shields.io/npm/dw/@stoplight/spectral-openapi?color=blue)](https://www.npmjs.com/package/@stoplight/spectral-openapi) [![Stoplight Forest](https://img.shields.io/ecologi/trees/stoplightinc)][stoplight_forest]
 
-Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) description to make sure you're leveraging enough of its features to help documentation tools like Stoplight Elements, ReDoc, and Swagger UI build the best quality API Reference Documentation possible. 
+This ruleset teaches Spectral how to validate an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) description document. It focuses on the technical validity of the document, covering schema-based validations, and semantic validations, which is a fancy way of saying it will mke sure you've not messed up the YAML/JSON or entered parameters and schemas that are against the rules of the OpenAPI Specification. 
+
+Supports OpenAPI v3.1., v3.0 and ye oldé v2.0.
 
 ## Installation
 
@@ -36,20 +38,29 @@ Next, use Spectral CLI to lint against your OpenAPI description. Don't have any 
 spectral lint api/openapi.yaml
 ```
 
-You should see some output like this:
+For example, when running this on the GitHub OpenAPI, Spectral spots an invalid example.
 
 ```
-/Users/phil/src/protect-earth-api/api/openapi.yaml
-  44:17      warning  no-ref-siblings      paths./v1
+https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/ghes-3.0/ghes-3.0.json
+ 48876:20  error  oas3-valid-schema-example  "example" property must match format "date-time".                       components.schemas.announcement-expiration.example
 ```
 
-Now you have some things to work on for your API. Thankfully these are only at the `warning` severity, and that is not going to [fail continuous integration](https://meta.stoplight.io/docs/spectral/ZG9jOjExNTMyOTAx-continuous-integration) (unless [you want them to](https://meta.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli#error-results)).
+This example has slash escaped quotations marks in it, which looks like a JSON to JSON error:
 
-There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-rulesets) you can use, or use for inspiration for your own rulesets and API Style Guides.
+```json
+  "announcement-expiration": {
+    "type": "string",
+    "format": "date-time",
+    "example": "\"2021-01-01T00:00:00.000-07:00\"",
+    "nullable": true
+  },
+```
+
+There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-rulesets) you can install, or use for inspiration for your own rulesets and API Style Guides.
 
 ## 🎉 Thanks
 
-- [Phil Sturgeon](https://github.com/philsturgeon) - Made some of these fairly opinionated but probably reasonable rules.
+- [Phil Sturgeon](https://github.com/philsturgeon) - Separated this package out from the `spectral:aas` ruleset bundled into the core of Spectral, ditching some less relevant rules and moving them over to [spectral-documentation](https://github.com/stoplightio/spectral-documentation).
 
 ## 📜 License
 
